@@ -24,6 +24,11 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <!--如果没写版本,从父层面找,找到了就直接用,全局统一-->
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--mysql-connector-java-->
         <dependency>
             <groupId>mysql</groupId>
@@ -41,7 +46,23 @@
             <scope>compile</scope>
         </dependency>
 
-
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <!-- 设置没有jar包-->
+                        <include>
+                            <groupId>nothing</groupId>
+                            <artifactId>nothing</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

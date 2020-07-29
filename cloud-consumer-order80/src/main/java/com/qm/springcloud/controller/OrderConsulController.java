@@ -1,8 +1,10 @@
 package com.qm.springcloud.controller;
 
+import com.qm.springcloud.lb.LoadBalancer;
 import com.qm.springcloud.CommonResult;
 import com.qm.springcloud.entities.Payment;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -21,8 +25,8 @@ public class OrderConsulController {
     @Resource
     private RestTemplate restTemplate;
 
-    // @Resource
-    // private ILoadBalancer lb;
+    @Resource
+    private LoadBalancer loadBalancer;
 
     @Resource
     private DiscoveryClient discoveryClient;
@@ -57,24 +61,24 @@ public class OrderConsulController {
             return new CommonResult<>(444,"操作失败！");
         }
     }
-    // @GetMapping("/consumer/payment/lb")
-    // public String getPaymentLB() {
-    //     // 通过容器中的 discoveryClient和服务名来获取服务集群
-    //     List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
-    //     if(instances == null || instances.size() <= 0) {
-    //         return null;
-    //     }
-    //     // 传入服务集群来计算出获取具体的服务实例
-    //     ServiceInstance serviceInstance = loadBalancer.instances(instances);
-    //     URI uri = serviceInstance.getUri();
-    //     return  restTemplate.getForObject(uri+"/payment/lb",String.class);
-    // }
-
     @GetMapping("/consumer/payment/lb")
     public String getPaymentLB() {
+        // 通过容器中的 discoveryClient和服务名来获取服务集群
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        if(instances == null || instances.size() <= 0) {
+            return null;
+        }
         // 传入服务集群来计算出获取具体的服务实例
-        return  restTemplate.getForObject(PAYMENT_URL+"/payment/lb",String.class);
+        ServiceInstance serviceInstance = loadBalancer.instances(instances);
+        URI uri = serviceInstance.getUri();
+        return  restTemplate.getForObject(uri+"/payment/lb",String.class);
     }
+
+    // @GetMapping("/consumer/payment/lb")
+    // public String getPaymentLB() {
+    //     // 传入服务集群来计算出获取具体的服务实例
+    //     return  restTemplate.getForObject(PAYMENT_URL+"/payment/lb",String.class);
+    // }
 
     @GetMapping(value="/consumer/payment/zipkin")
     public String paymentZipkin() {

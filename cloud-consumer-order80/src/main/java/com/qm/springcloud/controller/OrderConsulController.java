@@ -22,7 +22,7 @@ public class OrderConsulController {
     private RestTemplate restTemplate;
 
     // @Resource
-    // private LoadBalancer loadBalancer;
+    // private ILoadBalancer lb;
 
     @Resource
     private DiscoveryClient discoveryClient;
@@ -69,6 +69,12 @@ public class OrderConsulController {
     //     URI uri = serviceInstance.getUri();
     //     return  restTemplate.getForObject(uri+"/payment/lb",String.class);
     // }
+
+    @GetMapping("/consumer/payment/lb")
+    public String getPaymentLB() {
+        // 传入服务集群来计算出获取具体的服务实例
+        return  restTemplate.getForObject(PAYMENT_URL+"/payment/lb",String.class);
+    }
 
     @GetMapping(value="/consumer/payment/zipkin")
     public String paymentZipkin() {

@@ -12,6 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @EnableDiscoveryClient
 @SpringBootApplication
+// @RibbonClient(name = "CLOUD-PAYMENT-SERVICE",configuration = MyRule.class)
 public class OrderConsulMain80 {
 
     public static void main(String[] args) {

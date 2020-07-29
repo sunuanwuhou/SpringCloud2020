@@ -2,6 +2,7 @@ package com.qm.springcloud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @author qiumeng
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @description
  * @date 2020/7/28 14:32
  */
+@EnableDiscoveryClient
 @SpringBootApplication
 public class PaymentMain8081 {
 
